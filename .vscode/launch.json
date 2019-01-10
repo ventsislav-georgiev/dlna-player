@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/index.js",
+            "args": [
+                //"/Users/July/Documents/LG Dolby Vision HDR Trailer 4K Demo.ts"
+                //"/Users/July/Documents/Elementary S03E01 Enough Nemesis to Go Around.mkv"
+                "https://sally.onlinestorage.network/dl/JhvcEA7fcTlIeZP7MG3M9w/1547412065/859942187/5bf5a91be11653.57011691/Elementary%20S03E01%20Enough%20Nemesis%20to%20Go%20Around.mkv"
+            ]
+        }
+    ]
+}
