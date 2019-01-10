@@ -4,7 +4,7 @@ const glob = require('glob');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const path = require('path');
-const request = require('request');
+const klawSync = require('klaw-sync');
 
 const Dlna = require('./dlna');
 const fileInfo = require('./fileInfo');
@@ -44,7 +44,7 @@ class CLI {
   }
 
   _initSubtitles() {
-    if (!this.program.subtitles) return null;
+    if (!this.program.subtitles) return this._checkSubtitlesFromKodiAddons();
 
     let subtitles = fileInfo({ sub: this.program.subtitles, video: this.video.path });
 
@@ -87,6 +87,31 @@ class CLI {
     } else {
       this._chooseFirstPlayer();
     }
+  }
+
+  _checkSubtitlesFromKodiAddons() {
+    const subInfo = [
+      'C:\\Users\\extad\\AppData\\Roaming\\Kodi\\userdata\\addon_data\\service.subtitles.addic7ed',
+      'C:\\Users\\extad\\AppData\\Roaming\\Kodi\\userdata\\addon_data\\service.subtitles.opensubtitles_by_opensubtitles',
+      'C:\\Users\\extad\\AppData\\Roaming\\Kodi\\userdata\\addon_data\\service.subtitles.subscene',
+    ].map((root) => {
+      const files = klawSync(root, { 
+        traverseAll: true,
+        nodir: true,
+        filter: item => {
+          return path.extname(item.path) === '.srt';
+        }
+      });
+  
+      return files[0];
+    }).filter(v => v)
+      .sort(item => item.stats.mtime)[0];
+
+    if (!subInfo) {
+      return null;
+    }
+
+    return fileInfo({ sub: subInfo.path, video: this.video.path });
   }
 
   _chooseFirstPlayer() {

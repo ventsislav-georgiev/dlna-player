@@ -10,14 +10,14 @@ module.exports = ({ video, sub }) => {
   if (isLocal && !fs.existsSync(file)) return;
 
   const videoExtension = path.extname(video);
-  const extension = sub ? path.extname(file) || '.srt' : videoExtension;
+  const extension = sub ? path.extname(file) : videoExtension;
   const videoBasename = path.basename(video, videoExtension);
   const basename = sub && !isLocal ? videoBasename : path.basename(file, extension);
 
   const info = {
     path: file,
-    mime: mime.getType(file) || 'application/x-subrip',
-    extension,
+    mime: (extension && mime.getType(file)) || 'application/x-subrip',
+    extension: extension || '.srt',
     basename,
     isLocal,
     size: isLocal && fs.statSync(file).size
