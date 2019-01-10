@@ -18,19 +18,3 @@ if (program.args.length !== 1) program.help();
 
 const cli = new CLI(program);
 cli.stream();
-
-// const max = 433328987;
-// const des = 433317853;
-// const size = max - des;
-// const size2 = size * 3000;
-// const des2 = max - size2;
-// const headers = { 'Range': 'bytes=433317853-433328987' };
-
-// console.log(headers);
-// console.log(size2 / 1024 / 1024);
-
-// require('request').get(process.argv[2], 
-//   { headers }, 
-//   (err, resp, body) => {
-//     debugger;
-//   });

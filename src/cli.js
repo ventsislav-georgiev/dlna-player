@@ -16,32 +16,24 @@ class CLI {
   }
 
   stream() {
-    this.video = this._initVideo();
-
-    if (!this.video.isLocal) {
-      request({
-        url: this.video.path,
-        method: 'HEAD'
-      }, (err, response) => {
-        this.video.size = parseInt(response.headers['content-length']);
-  
-        this.subtitles = this._initSubtitles();
+    this._initVideo()
+      .then((video) => {
+        this.video = video;
+      })
+      .then(() => this._initSubtitles())
+      .then((subtitles) => {
+        this.subtitles = subtitles;
+      })
+      .then(() => {
         this.server = this._initServer();
         if (this.program.dlna) this._initDlna();
       });
-
-      return;
-    }
-
-    this.subtitles = this._initSubtitles();
-    this.server = this._initServer();
-    if (this.program.dlna) this._initDlna();
   }
 
   // private
 
   _initVideo() {
-    const video = fileInfo(this.program.args[0]);
+    const video = fileInfo({ video: this.program.args[0] });
 
     if (!video) {
       console.log(chalk.red('File not found'));
@@ -54,14 +46,14 @@ class CLI {
   _initSubtitles() {
     if (!this.program.subtitles) return null;
 
-    let subtitles = fileInfo(this.program.subtitles);
+    let subtitles = fileInfo({ sub: this.program.subtitles, video: this.video.path });
 
     if (!subtitles) {
       // Select same filename but different extensions: filename!(*.mkv)
       const globPattern = `${this.video.basename}!(*${this.video.extension})`;
       const subsFiles = glob.sync(path.join(path.dirname(this.video.path), globPattern));
 
-      subtitles = fileInfo(subsFiles[0]);
+      subtitles = fileInfo({ sub: subsFiles[0], video: this.video.path });
     }
 
     return subtitles;
