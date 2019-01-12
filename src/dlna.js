@@ -51,7 +51,22 @@ class Dlna extends EventEmitter {
       info += `with subtitles ${chalk.blue(subtitles.path)}`;
     }
 
-    player.play(video.url, options);
+    const onPlayError = (err) => {
+      if (!err) return;
+
+      console.log(err);
+      const transitionNotAvailable = err && err.errorCode === '701';
+      this._stop({
+        player,
+        server,
+        exit: !transitionNotAvailable,
+        callback: () => {
+          player.play(video.url, options, onPlayError);
+        }
+      });
+    };
+
+    player.play(video.url, options, onPlayError);
 
     console.log(info);
     console.log('\nUsage:');
@@ -92,14 +107,7 @@ class Dlna extends EventEmitter {
       }
 
       if (key.name == 'q' || (key.ctrl && key.name == 'c')) {
-        player.client.stop(() => {
-          console.log(chalk.red('Stopped'));
-          if (!paused) player.client.pause();
-          rl.close();
-          server.close(() => {
-            process.exit(0);
-          });
-        });
+        this._stop({ player, server, rl });
       }
 
       if (key.name == 'i') {
@@ -123,6 +131,18 @@ class Dlna extends EventEmitter {
           console.log(err, res);
         });
       }
+    });
+  }
+
+  _stop({ player, server, rl, exit = true, callback = () => {} }) {
+    player.client.stop(() => {
+      console.log(chalk.red('Stopped'));
+      player.client.pause();
+      if (rl) rl.close();
+      if (exit)
+        server.close(() => process.exit(0));
+      else
+        callback();
     });
   }
 }

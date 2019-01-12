@@ -2,6 +2,9 @@
 
 const program = require('commander');
 const CLI = require('./src/cli');
+ 
+// override console logs to file
+require('./src/console.js');
 
 program
   .version(require('./package').version, '-v, --version')
