@@ -1,7 +1,8 @@
-const Dlnacasts = require('./dlnacasts');
-const chalk     = require('chalk');
-const ora       = require('ora');
-const readline  = require('readline');
+const dlnacasts = require('./dlnacasts');
+const chalk = require('chalk');
+const ora = require('ora');
+const readline = require('readline');
+const EventEmitter = require('events');
 
 function sleep(ms) {
   return new Promise(resolve => {
@@ -9,9 +10,11 @@ function sleep(ms) {
   });
 }
 
-class Dlna {
+class Dlna extends EventEmitter {
   constructor() {
-    this.dlnacasts = Dlnacasts();
+    super();
+
+    this.dlnacasts = dlnacasts();
     this.startPlayer = this.startPlayer.bind(this);
   }
 
@@ -59,6 +62,7 @@ class Dlna {
     setInterval(() => {
       player.client.getTransportInfo((err, result) => {
         if (err) throw err;
+        this.emit(result.CurrentTransportState);
         if (result.CurrentTransportState === 'STOPPED') {
           server.close(() => {
             process.exit(0);
@@ -121,4 +125,4 @@ class Dlna {
   }
 }
 
-module.exports = Dlna;
+module.exports = new Dlna();

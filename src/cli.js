@@ -6,7 +6,7 @@ const ora = require('ora');
 const path = require('path');
 const klawSync = require('klaw-sync');
 
-const Dlna = require('./dlna');
+const dlna = require('./dlna');
 const fileInfo = require('./fileInfo');
 const mediaServer = require('./mediaServer');
 
@@ -80,8 +80,6 @@ class CLI {
   }
 
   _initDlna() {
-    this.dlna = new Dlna();
-
     if (this.program.list) {
       this._choosePlayer();
     } else {
@@ -115,7 +113,7 @@ class CLI {
   }
 
   _chooseFirstPlayer() {
-    this.dlna.start({
+    dlna.start({
       video: this.video,
       subtitles: this.subtitles,
       server: this.server
@@ -125,7 +123,7 @@ class CLI {
   async _choosePlayer() {
     // search for players
     const spinner = ora('Searching for devices...').start();
-    const players = await this.dlna.searchPlayers();
+    const players = await dlna.searchPlayers();
     spinner.stop();
 
     if (players.length === 0) {
@@ -147,7 +145,7 @@ class CLI {
     }
 
     // stream to player
-    this.dlna.startPlayer({
+    dlna.startPlayer({
       player,
       video: this.video,
       subtitles: this.subtitles,

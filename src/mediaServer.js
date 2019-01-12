@@ -1,27 +1,31 @@
 const http = require('http');
 const fs = require('fs');
-const request = require('request');
+const got = require('got');
 
 module.exports = (video, subtitles) => {
-  return http.createServer(function (req, res) {
+  let currentRequest = null;
+
+  return http.createServer((req, res) => {
     const url = req.url;
 
     if (req.headers.range) {
       //console.log('range: ', req.headers.range);
+
+      if (currentRequest) currentRequest.end();
 
       const range = req.headers.range;
       const parts = range.replace(/bytes=/, '').split('-');
       const partialstart = parts[0];
       const partialend = parts[1];
 
-      let start = parseInt(partialstart, 10);
+      const start = parseInt(partialstart, 10);
       const end = partialend ? parseInt(partialend, 10) : video.size - 1;
       const chunksize = (end - start) + 1;
 
       const file = video.isLocal ?
         fs.createReadStream(video.path, { start, end }) :
-        request.get(video.path, {
-          headers: { 'Range': `bytes=${start}-${end}` }
+        currentRequest = got.stream.get(video.path, {
+          headers: { 'Range': `bytes=${start}-` }
         });
 
       res.writeHead(206, {
@@ -31,7 +35,9 @@ module.exports = (video, subtitles) => {
         'Content-Type': video.mime
       });
 
-      return file.pipe(res);
+      file.pipe(res);
+
+      return;
     }
 
     // GET /

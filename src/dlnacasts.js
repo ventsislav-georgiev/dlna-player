@@ -119,7 +119,16 @@ module.exports = function () {
   };
 
   if (ssdp) {
+    let intervalId;
+    setTimeout(() => {
+      intervalId = setInterval(() => {
+        that.update();
+      }, 1000);
+    });
+
     ssdp.on('response', function (headers, statusCode, info) {
+      clearInterval(intervalId);
+
       if (!headers.LOCATION) return;
 
       get.concat(headers.LOCATION, function (err, res, body) {
@@ -160,8 +169,6 @@ module.exports = function () {
 
   that.destroy = function () {
   };
-
-  that.update();
 
   return that;
 };

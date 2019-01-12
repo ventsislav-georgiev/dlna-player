@@ -1,7 +1,7 @@
 const fs = require('fs');
 const mime = require('mime');
 const path = require('path');
-const request = require('request');
+const got = require('got');
 const stream = require('stream');
 
 module.exports = ({ video, sub }) => {
@@ -31,13 +31,13 @@ module.exports = ({ video, sub }) => {
 
     // subtitles
     if (sub) {
-      request.get(sub, {
+      got.get(sub, {
         headers: {
           'Referer': 'http://www.addic7ed.com'
         }
-      }, (err, resp, body) => {
+      }).then((resp) => {
         info.stream = new stream.PassThrough();
-        info.stream.end(Buffer.from(body, 'utf8'));
+        info.stream.end(Buffer.from(resp.body, 'utf8'));
         info.size = info.stream.readableLength;
         resolve(info);
       });
@@ -46,11 +46,11 @@ module.exports = ({ video, sub }) => {
     }
 
     // video
-    request({
+    got({
       url: video,
       method: 'HEAD'
-    }, (err, response) => {
-      info.size = parseInt(response.headers['content-length']);
+    }).then((resp) => {
+      info.size = parseInt(resp.headers['content-length']);
       resolve(info);
     });
   });
