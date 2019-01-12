@@ -88,6 +88,8 @@ class CLI {
   }
 
   _checkSubtitlesFromKodiAddons() {
+    if (process.platform !== 'win32') return;
+
     const subInfo = [
       'C:\\Users\\extad\\AppData\\Roaming\\Kodi\\userdata\\addon_data\\service.subtitles.addic7ed',
       'C:\\Users\\extad\\AppData\\Roaming\\Kodi\\userdata\\addon_data\\service.subtitles.opensubtitles_by_opensubtitles',
