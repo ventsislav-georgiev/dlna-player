@@ -59,7 +59,7 @@ class Dlna extends EventEmitter {
     console.log(`Press ${chalk.blue('<Up/Down>')} to VolUp/VolDown`);
     console.log(`Press ${chalk.blue('q')} to quit`);
 
-    setInterval(() => {
+    const getTransportInfo = () => {
       player.client.getTransportInfo((err, result) => {
         if (err) throw err;
         this.emit(result.CurrentTransportState);
@@ -69,8 +69,10 @@ class Dlna extends EventEmitter {
           });
         }
       });
-    }, 1500);
+      setTimeout(getTransportInfo, 1500);
+    };
 
+    setTimeout(getTransportInfo, 3000);
     this._bindKeys({ player, server });
   }
 
