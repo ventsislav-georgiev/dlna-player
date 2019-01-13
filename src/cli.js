@@ -33,7 +33,13 @@ class CLI {
   // private
 
   _initVideo() {
-    const video = fileInfo({ video: this.program.args[0] });
+    // Use http instead of https.
+    // https sometimes have cert issues like:
+    // Hostname/IP does not match certificate's altnames: 
+    // Host: julianna.rapidcdn.vip. is not in the cert's altnames:
+    // DNS:*.energycdn.com, DNS:energycdn.com
+    const videoPath = this.program.args[0].replace('https://', 'http://');
+    const video = fileInfo({ video: videoPath });
 
     if (!video) {
       console.log(chalk.red('File not found'));
