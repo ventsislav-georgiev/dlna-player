@@ -43,7 +43,7 @@ class Dlna extends EventEmitter {
 
   startPlayer({ player, video, subtitles, server }) {
     const title = decodeURIComponent((video.path || '').substr(video.path.lastIndexOf('/') + 1 || 0));
-    const options = { title, type: video.mime };
+    const options = { title, type: video.mime, file: video };
     let info = `Sending ${chalk.blue(video.path)} to ${chalk.blue(player.name)} `;
 
     if (subtitles) {

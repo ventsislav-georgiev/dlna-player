@@ -88,7 +88,13 @@ MediaRendererClient.prototype.load = function (url, options, callback) {
   }
 
   var contentType = options.contentType || 'video/mpeg'; // Default to something generic
-  var protocolInfo = 'http-get:*:' + contentType + ':DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000';
+  var protocolInfo = 'http-get:*:' + contentType;
+  
+  if (!options.file.isLocal || options.contentType !== 'video/mp2t') {
+    protocolInfo += ':DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000';
+  } else {
+    protocolInfo += ':*';
+  }
 
   var metadata = options.metadata || {};
   metadata.url = url;

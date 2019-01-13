@@ -2,7 +2,6 @@ var MediaRenderer = require('./upnp-mediarenderer-client');
 var debug = require('debug')('dlnacasts');
 var events = require('events');
 var get = require('simple-get');
-var mime = require('mime');
 var parallel = require('run-parallel');
 var parseString = require('xml2js').parseString;
 
@@ -62,12 +61,13 @@ module.exports = function () {
 
         var media = {
           autoplay: opts.autoPlay !== false,
-          contentType: opts.type || mime.lookup(url, 'video/mp4'),
+          contentType: opts.type,
           metadata: opts.metadata || {
             title: opts.title || '',
             type: 'video', // can be 'video', 'audio' or 'image'
             subtitlesUrl: player.subtitles && player.subtitles.length ? player.subtitles[0] : null
-          }
+          },
+          file: opts.file
         };
 
         var callback = cb;
