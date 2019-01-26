@@ -16,6 +16,7 @@ module.exports = ({ video, sub }) => {
 
   const info = {
     path: file,
+    pathWithoutExt: path.join(path.dirname(file), videoBasename),
     mime: (extension && mime.getType(file)) || 'application/x-subrip',
     extension: extension || '.srt',
     basename,

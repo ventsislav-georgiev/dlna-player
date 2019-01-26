@@ -1,5 +1,6 @@
 const address = require('network-address');
 const chalk = require('chalk');
+const fs = require('fs');
 const glob = require('glob');
 const inquirer = require('inquirer');
 const ora = require('ora');
@@ -50,7 +51,9 @@ class CLI {
   }
 
   _initSubtitles() {
-    if (!this.program.subtitles) return this._checkSubtitlesFromKodiAddons();
+    const samePathSubs = `${this.video.pathWithoutExt}.srt`;
+    if (!this.program.subtitles && fs.existsSync(samePathSubs)) return fileInfo({ sub: samePathSubs, video: this.video.path });
+    if (!this.program.subtitles && !this.video.isLocal) return this._checkSubtitlesFromKodiAddons();
 
     let subtitles = fileInfo({ sub: this.program.subtitles, video: this.video.path });
 

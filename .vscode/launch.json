@@ -10,8 +10,9 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/index.js",
             "args": [
+                "P:\\Movies\\2002 - Harry Potter And The Chamber of Secrets\\Harry.Potter.And.The.Chamber.of.Secrets.2002.2160p.BluRay.REMUX.HEVC.DTS-X.7.1-TASTED.mkv"
                 //"/Users/July/Documents/Videos/Unplayable/LG Dolby Vision HDR Trailer 4K Demo.ts"
-                "https://sally.onlinestorage.network/dl/JhvcEA7fcTlIeZP7MG3M9w/1547412065/859942187/5bf5a91be11653.57011691/Elementary%20S03E01%20Enough%20Nemesis%20to%20Go%20Around.mkv"
+                //"https://sally.onlinestorage.network/dl/JhvcEA7fcTlIeZP7MG3M9w/1547412065/859942187/5bf5a91be11653.57011691/Elementary%20S03E01%20Enough%20Nemesis%20to%20Go%20Around.mkv"
                 //"-s",
                 //"http://www.addic7ed.com/original/93368/13",
                 //"/Users/July/Documents/Elementary S03E01 Enough Nemesis to Go Around.srt",
